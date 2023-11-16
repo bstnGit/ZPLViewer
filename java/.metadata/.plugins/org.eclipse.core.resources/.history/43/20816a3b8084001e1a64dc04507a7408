@@ -1,0 +1,24 @@
+package com.bstn.zplviewer.zpl.constants;
+
+import java.awt.Color;
+
+public enum ZColor {
+	BLACK("B", "#000000"),
+	WHITE("W", "#FFFFFF");
+
+	private final String representation;
+	private final Color color;
+	
+	ZColor(String representation, String color) {
+		this.representation = representation;
+		this.color = color;
+	}
+
+	public String getRepresentation() {
+		return representation;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+}

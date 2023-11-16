@@ -1,0 +1,22 @@
+package com.bstn.zplviewer.zpl.constants;
+
+public enum ZColor {
+	BLACK("B", "#000000"),
+	WHITE("W", "#FFFFFF");
+
+	private final String representation;
+	private final Color color;
+	
+	ZColor(String representation, String hexadecimal) {
+		this.representation = representation;
+		this.hexadecimal = hexadecimal;
+	}
+
+	public String getRepresentation() {
+		return representation;
+	}
+
+	public String getHexadecimal() {
+		return hexadecimal;
+	}
+}

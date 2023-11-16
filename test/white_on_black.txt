@@ -1,0 +1,10 @@
+^XA
+^FO180,160^GB498,260,190^FS
+^LRY
+^CF0,40
+^FO200,200^FDInverse text^FS
+^CF0,40
+^FO200,280^FDWhite on black background^FS
+^FO400,270^FD^FS
+^LRN
+^XZ

@@ -1,0 +1,6 @@
+^XA
+^CI28
+^CF0,50,0
+^FO20,20^FDSpecial characters ÄÄÖÜäöüßñêö^FS
+^FO20,100^FDZebra Encoding set by CI28 (UTF-8)^FS
+^XZ

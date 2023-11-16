@@ -1,0 +1,32 @@
+package com.bstn.zplviewer.zpl.command;
+
+import com.bstn.zplviewer.interpreter.InterpreterEnvironment;
+
+public class LabelReverse extends Command{
+
+	@Override
+	public void execute(InterpreterEnvironment env) {
+		
+	}
+
+	@Override
+	public void parse(String parameters) {
+		
+	}
+
+	@Override
+	public String getShortName() {
+		return null;
+	}
+
+	@Override
+	public String getLongName() {
+		return null;
+	}
+
+	@Override
+	public Layer getLayer() {
+		return Layer.PROPERTIES;
+	}
+
+}

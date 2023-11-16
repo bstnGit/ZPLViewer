@@ -1,0 +1,5 @@
+package com.bstn.zplviewer.zpl.command;
+
+public class LabelReverse extends Command{
+
+}
