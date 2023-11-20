@@ -1,7 +1,11 @@
 package com.bstn.zplviewer;
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.bstn.zplviewer.graphics.DPI;
 import com.bstn.zplviewer.graphics.PDFRenderer;
@@ -9,24 +13,19 @@ import com.bstn.zplviewer.graphics.RenderQueue;
 import com.bstn.zplviewer.interpreter.Interpreter;
 import com.bstn.zplviewer.interpreter.Parser;
 import com.bstn.zplviewer.util.Logger;
+import com.bstn.zplviewer.util.PDFUtil;
 import com.bstn.zplviewer.util.TextFile;
 import com.bstn.zplviewer.util.UnitConverter;
-import com.bstn.zplviewer.util.Validator;
 import com.bstn.zplviewer.zpl.ZPLDocument;
 
-/*
- * Code 39
- * Code 128
- * QR Codes
- */
 public class ZPLViewer {
 
-	public static final String version = "0.0.3";
+	public static final String version = "0.4.1";
 	
 	private File input;
 	private File output;
 	
-	private int labelIndex;
+	private ArrayList<Range> labelRanges;
 	
 	public static void main(String[] args) {
 		ZPLViewer zplViewer = new ZPLViewer();
@@ -37,10 +36,10 @@ public class ZPLViewer {
 	}
 
 	private boolean parseArguments(String[] args) {
-		if (args.length <= 2) {
-	        System.out.println("Usage: zplviewer [input file] [output file], [label index]");
+	    if (args.length < 2) {
+	        System.out.println("Usage: zplviewer [input file] [output directory], [label index]");
 	        return false;
-		}
+	    }
 
 	    input = new File(args[0]);
 	    output = new File(args[1]);
@@ -50,32 +49,55 @@ public class ZPLViewer {
 	        return false;
 	    }
 
-	    if (output.exists()) {
-	        System.out.print("File already exists. Do you want to overwrite it? (y/n)\n > ");
-	        try (Scanner scanner = new Scanner(System.in)) {
-	            String response = scanner.next();
-	            if (!response.equalsIgnoreCase("Y")) {
-	                System.out.println("Operation canceled.");
-	                return false;
+	    if (output.exists() && output.isFile()) {
+	        System.out.println("The specified output path is a file. Please provide a directory for output.");
+	        return false;
+	    }
+
+	    if (!output.exists()) {
+	        if (!output.mkdirs()) {
+	            Logger.error("Unable to create the output directory.");
+	            return false;
+	        }
+	    }
+
+	    if (args.length > 2) {
+	        labelRanges = parseRanges(args[2]);
+	    } else {
+	        labelRanges = new ArrayList<>();
+	        labelRanges.add(new Range(1, 1));
+	    }
+
+	    return true;
+	}
+	
+	public static ArrayList<Range> parseRanges(String input) {
+	    ArrayList<Range> ranges = new ArrayList<>();
+
+	    String[] rangeStrings = input.split(",");
+	    for (String rangeString : rangeStrings) {
+	        String[] parts = rangeString.split("-");
+	        if (parts.length == 2) {
+	            try {
+	                int from = Integer.parseInt(parts[0]);
+	                int to = Integer.parseInt(parts[1]);
+	                ranges.add(new Range(from, to));
+	            } catch (NumberFormatException e) {
+	                Logger.error("Invalid range format: " + rangeString);
 	            }
-	            if (!output.delete()) {
-	    	        Logger.error("Unable to delete the existing file.");
-	                return false;
+	        } else if (parts.length == 1) {
+	            try {
+	                int value = Integer.parseInt(parts[0]);
+	                ranges.add(new Range(value, value));
+	            } catch (NumberFormatException e) {
+	            	Logger.error("Invalid range format: " + rangeString);
 	            }
+	        } else {
+	        	Logger.error("Invalid range format: " + rangeString);
 	        }
 	    }
 	    
-	    if(args.length > 2) {
-		    String tempLabelIndex = args[2];
-		    
-		    if(!Validator.validateInteger(tempLabelIndex)) {
-    	        Logger.error("Label index '" + args[2] + "' should be numeric.");
-		    	return false;
-		    }
-		    
-		    labelIndex = Integer.parseInt(tempLabelIndex);
-	    }
-	    return true;
+	    return ranges;
 	}
 
 	private void execute() {
@@ -88,11 +110,44 @@ public class ZPLViewer {
 			UnitConverter unitConverter = new UnitConverter(DPI.DPI203);
 			
 			Interpreter interpreter = new Interpreter(zplDocument);
-			RenderQueue renderQueue = interpreter.interpret(unitConverter, labelIndex, output);
-			System.out.println(renderQueue);
+
+			ArrayList<File> pdfFiles = new ArrayList<>();
+						
+			for (int rangeIndex = 0; rangeIndex < labelRanges.size(); rangeIndex++) {
+				PDFRenderer pdfRenderer = new PDFRenderer(new PDDocument());
+
+				Range range = labelRanges.get(rangeIndex);
+				
+				int labelCount = zplDocument.getLabels().size();
+				
+				if(range.getTo() > labelCount) {
+					Logger.warning("Invalid range bounds: " + range.getFrom() + " - " + range.getTo() + "; used " + range.getFrom() + " - " + labelCount + " instead.");
+					range.setTo(labelCount);
+				}
+				
+				for (int labelIndex = range.getFrom(); labelIndex <= range.getTo(); labelIndex++) {
+					RenderQueue renderQueue = interpreter.interpret(unitConverter, labelIndex -1, output);
+					
+					if(renderQueue != null) {
+						pdfRenderer.newPage();
+						renderQueue.render(pdfRenderer, output);
+						pdfRenderer.closeStreamWriter();
+					}else {
+						Logger.error(String.format("Failed to render label with index %d.", labelIndex));
+					}
+				}
+				
+				File pdfFile = Paths.get(output.getAbsolutePath(), "zpl_" + range.getFrom() + "-" + range.getTo() + ".pdf").toFile();
+				if(pdfRenderer.save(pdfFile)) {
+					pdfFiles.add(pdfFile);
+				}
+				
+				Logger.info("Output PDF file '" + pdfFile + "'.");
+			}
 			
-			PDFRenderer pdfRenderer = new PDFRenderer();
-			renderQueue.render(pdfRenderer, output);
+			for (File file : pdfFiles) {
+				PDFUtil.open(file);
+			}
 		}
 	}
 }

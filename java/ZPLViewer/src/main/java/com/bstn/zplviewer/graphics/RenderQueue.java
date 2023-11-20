@@ -2,18 +2,17 @@ package com.bstn.zplviewer.graphics;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-import com.bstn.zplviewer.util.PDFUtil;
-
-import renderables.Renderable;
+import com.bstn.zplviewer.renderables.Renderable;
 
 public class RenderQueue {
-	private ArrayList<Renderable> queue;
+	private List<Renderable> queue;
 
     public RenderQueue() {
         queue = new ArrayList<>();
     }
-
+    
     /**
      * Adds a Renderable element to the end of the render queue.
      *
@@ -28,14 +27,12 @@ public class RenderQueue {
      *
      * @param renderer The Renderer used to render each element in the queue.
      */
-    public void render(Renderer renderer, File file) {
+    public PDFRenderer render(PDFRenderer renderer, File file) {
         for (Renderable renderable : queue) {
             renderable.render(renderer);
         }
         
-        if(renderer.save(file)) {
-        	PDFUtil.open(file);
-        }
+        return renderer;
     }
 
 	@Override

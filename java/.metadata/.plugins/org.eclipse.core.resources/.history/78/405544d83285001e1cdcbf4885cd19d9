@@ -1,0 +1,6 @@
+package com.bstn.zplviewer;
+
+public class Range {
+	private int from;
+	private int to;
+}

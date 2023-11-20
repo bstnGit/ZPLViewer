@@ -68,7 +68,7 @@ public class Converter {
 			return false;
 		}
 		
-	    Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be an accepted character Y/N");
+	    Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be an accepted character 'Y/N'.");
 		
 		return defaultValue;
 	}
@@ -95,7 +95,7 @@ public class Converter {
 		}
 		
 		if (parameterValue.length() != 1) {
-	        Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be a single character.");
+	        Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be a single character; used " + defaultValue + " instead.");
 	        return defaultValue;
 	    }
 		
@@ -108,7 +108,7 @@ public class Converter {
 			}
 		}
 		
-	    Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be an accepted character: " + Arrays.asList(acceptedValues).toString());
+	    Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be an accepted character: " + Arrays.asList(acceptedValues).toString() + ".");
 	    return defaultValue;
 	}
 	
@@ -126,7 +126,7 @@ public class Converter {
 		}
 		
 	    if (parameterValue == null || parameterValue.length() != 1) {
-	        Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be a single character.");
+	        Logger.warning(getPrefix(command, parameterName, parameterValue) + " should be a single character; used " + defaultValue + " instead.");
 			return defaultValue;
 	    }
 

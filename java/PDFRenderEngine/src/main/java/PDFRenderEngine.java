@@ -30,7 +30,7 @@ public class PDFRenderEngine {
 	public PDFRenderEngine(int width, int height) {
 		this.canvasWidth = width;
 		this.canvasHeight = height;
-
+		
 		init();
 	}
 
@@ -51,6 +51,8 @@ public class PDFRenderEngine {
 
 		try {
 			this.contentStream = new PDPageContentStream(pdDocument, pdPage, AppendMode.APPEND, false, false);
+			contentStream.transform(Matrix.getTranslateInstance(0, pdPage.getMediaBox().getHeight()));
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -132,10 +134,10 @@ public class PDFRenderEngine {
 
 	public void drawLine(int x1, int y1, int x2, int y2) {
 		try {
-			float adjustedX1 = originX + x1;
-			float adjustedY1 = originY - y1;
-			float adjustedX2 = originX + x2;
-			float adjustedY2 = originY - y2;
+			float adjustedX1 = x1;
+			float adjustedY1 = -y1;
+			float adjustedX2 = x2;
+			float adjustedY2 = -y2;
 
 			contentStream.moveTo(adjustedX1, adjustedY1);
 			contentStream.lineTo(adjustedX2, adjustedY2);

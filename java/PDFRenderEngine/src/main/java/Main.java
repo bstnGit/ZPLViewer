@@ -9,8 +9,9 @@ public class Main {
 		engine.setStrokingColor(Color.black);
 		
 		engine.drawRoundedRectangle(10, 100, 350, 250, 100);
-
+		engine.drawLine(100, 500, 100, 100);
 
 		engine.save(new File("output.pdf"));
+		System.out.println("Saved");
 	}
 }

@@ -43,5 +43,10 @@
 		    <version>5.10.1</version>
 		    <scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.bstn.pdfrenderengine</groupId>
+			<artifactId>PDFRenderEngine</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

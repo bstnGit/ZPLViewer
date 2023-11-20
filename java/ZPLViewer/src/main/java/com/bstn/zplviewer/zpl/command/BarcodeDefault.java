@@ -21,7 +21,6 @@ public class BarcodeDefault extends Command {
 	private float widthRatio;
 	
 	/*
-	 * TODO: Maybe inaccurate
 	 * Accepted Values: 0 - 320
 	 * Default Value: 10
 	 */
@@ -33,18 +32,17 @@ public class BarcodeDefault extends Command {
 	public void execute(InterpreterEnvironment env) {
 		env.setBarcodeModuleWidth(moduleWidth);
 		env.setBarcodeWidthRatio(widthRatio);
-		env.setBarcodeHeight(barCodeHeight);
+		env.setGlobalBarcodeHeight(barCodeHeight);
 
 	}
 	
 	@Override
 	public void parse(String parameters) {
-		List<String> parameterList = Converter.parametersStringToList(parameters, 5, String.valueOf(ZPL.delimiter));
+		List<String> parameterList = Converter.parametersStringToList(parameters, 3, String.valueOf(ZPL.delimiter));
 		
 		this.moduleWidth = Converter.parameterToIntWithRange(this, "module width", parameterList.get(0), 1, 10, 2);
 		this.widthRatio = Converter.parameterToFloatWithRange(this, "wide bar to narrow bar width ratio", parameterList.get(1), 2.0f, 3.0f, 1, 2.0f);
 		this.barCodeHeight = Converter.parameterToIntWithRange(this, "bar code height", parameterList.get(2), 0, 320, 10);
-
 	}
 	
 	@Override

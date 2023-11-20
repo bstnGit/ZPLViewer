@@ -36,21 +36,25 @@ public class ScalableBitmappedFont extends Command {
 	 * Accepted Values: 10 to 32000
 	 * Default Value: last accepted ^CF
 	 */
-	private int characterWidth;
+	private int width;
 	
 	
 	@Override
 	public void execute(InterpreterEnvironment env) {
-
+		env.setFont(font);
+		env.setFontHeight(characterHeight);
+		env.setFontWidth(width);
 	}
 
 	@Override
 	public void parse(String parameters) {
 		List<String> parameterList = Converter.parametersStringToList(parameters, 3, String.valueOf(ZPL.delimiter));
-		
-		this.font = ZFont.getByCharacter(this, Converter.parametersToFontName(this, "Specified Default Font", parameterList.get(0), '0'));
-		this.fieldOrientation = ZOrientation.getRotationByName(Converter.parametersToCharacter(this, "orientation", new char[] {'N', 'R', 'I', 'B'}, parameterList.get(0), 'N'));
-		
+
+		this.font = ZFont.getByCharacter(this, Converter.parametersToFontName(this, "font", Character.toString(parameterList.get(0).charAt(0)), '0'));
+		this.fieldOrientation = ZOrientation.getRotationByName(Converter.parametersToCharacter(this, "field orientation", new char[] {'N', 'R', 'I', 'B'}, Character.toString(parameterList.get(0).charAt(1)), 'N'));
+		this.width = Converter.parameterToIntWithRange(this, "width", parameterList.get(2), 0, 32000, 0);
+		this.characterHeight = Converter.parameterToIntWithRange(this, "character height", parameterList.get(1), 0, 32000, width);
+
 	}
 
 	@Override

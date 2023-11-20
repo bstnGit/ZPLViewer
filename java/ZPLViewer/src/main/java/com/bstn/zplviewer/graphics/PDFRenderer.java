@@ -4,6 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import javax.imageio.ImageIO;
 
@@ -18,48 +21,44 @@ import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import com.bstn.zplviewer.graphics.barcode.BarcodeGenerator;
+import com.bstn.zplviewer.renderables.Code128Barcode;
+import com.bstn.zplviewer.renderables.Graphic;
+import com.bstn.zplviewer.renderables.Rectangle;
+import com.bstn.zplviewer.renderables.Text;
 import com.bstn.zplviewer.zpl.constants.ZFont;
 import com.bstn.zplviewer.zpl.constants.ZJustification;
 
-import renderables.Code128Barcode;
-import renderables.Graphic;
-import renderables.Rectangle;
-import renderables.Text;
-
-public class PDFRenderer implements Renderer {
+public class PDFRenderer {
 	
 	private PDDocument pdDocument;
+	private PDPage pdPage;
 	private PDPageContentStream contentStream;
 	private float originX, originY;
 	
-	public PDFRenderer() {
-		init();
-	}
-
-	private void init() {
-		this.pdDocument = new PDDocument();
-		PDRectangle pdRectangle = null;
-
-		PDPage pdPage = new PDPage(pdRectangle);
-
-		this.pdDocument.addPage(pdPage);
-
+	public PDFRenderer(PDDocument pdDocument) {
+		this.pdDocument = pdDocument;
+				
 		try {
-			this.contentStream = new PDPageContentStream(pdDocument, pdPage, AppendMode.APPEND, false, false);
+            ZFont.ZERO.setFont(PDType0Font.load(pdDocument, new File("fonts/zero.ttf")));
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		try {
-			ZFont.ZERO.setFont(PDType0Font.load(pdDocument, new File("C:\\Users\\JerBa\\Desktop\\synka\\ZPLViewer\\java\\ZPLViewer\\src\\main\\resources\\font\\Swiss-721-Condensed-Bold.ttf")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		originY = pdPage.getMediaBox().getHeight();
 	}
 	
+	public static void addResourceURLIntoClassPath(URL u) throws IOException {
+	    URLClassLoader urlLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+	    Class<URLClassLoader> sysclass = URLClassLoader.class;
+	    try {
+	        Method method = sysclass.getDeclaredMethod("addURL", new Class[] { URL.class });
+	        method.setAccessible(true);
+	        method.invoke(urlLoader, new Object[] { u });
+	    } catch (Throwable t) {
+	        t.printStackTrace();
+	    } 
+	}
+
 	/**
 	 * Draws a string on the canvas with the specified parameters.
 	 *
@@ -71,7 +70,6 @@ public class PDFRenderer implements Renderer {
 	 * @param color  The color of the text.
 	 * @param font   The font used for rendering the text.
 	 */
-	@Override
 	public void drawText(Text text) {		
 		try {
             contentStream.setNonStrokingColor(text.getZColor().getColor());
@@ -93,7 +91,7 @@ public class PDFRenderer implements Renderer {
 	        }else {
 	        	contentStream.setHorizontalScaling((text.getWidth() / text.getHeight()) * 100);
 	        }
-
+	        
 	        contentStream.newLineAtOffset(originX + text.getX() + justificationX, originY - fontHeight - text.getY() + justificationY);
 	        contentStream.showText(text.getData());
 	        contentStream.endText();
@@ -114,7 +112,6 @@ public class PDFRenderer implements Renderer {
 	 * @param color The color of the rectangle.
 	 * @param degreeOfCornerRounding The degree of corner rounding for the rectangle accepted are values from 1 to 8.
 	 */
-	@Override
 	public void drawRectangle(Rectangle rectangle) {
 		try {
 			contentStream.setStrokingColor(rectangle.getZColor().getColor());
@@ -150,7 +147,6 @@ public class PDFRenderer implements Renderer {
 	    }
 	}
 
-	@Override
 	public void drawGraphic(Graphic graphic) {
 		try {
 			PDImageXObject imageXObject = LosslessFactory.createFromImage(pdDocument, graphic.getBufferedImage());
@@ -164,10 +160,9 @@ public class PDFRenderer implements Renderer {
 		}
 	}
 	
-	@Override
 	public void drawCode128Barcode(Code128Barcode barcode) {
 		BarcodeGenerator barcodeGenerator = new BarcodeGenerator();
-		BufferedImage bufferedImage = barcodeGenerator.getBarCode128(barcode.getData(), (int) barcode.getWidth(), (int) barcode.getHeight(), true, barcode.getMode());
+		BufferedImage bufferedImage = barcodeGenerator.getBarCode128(barcode);
 		
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -199,6 +194,23 @@ public class PDFRenderer implements Renderer {
 		}
 		
 	}
+	
+	public void newPage() {		
+        PDRectangle pageSize = PDRectangle.A4;
+                
+		this.pdPage = new PDPage(pageSize);
+
+		this.pdDocument.addPage(pdPage);
+
+		try {
+			this.contentStream = new PDPageContentStream(pdDocument, pdPage, AppendMode.APPEND, false, false);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		originY = pdPage.getMediaBox().getHeight();
+	}
 
 	public boolean save(File file) {
         try {
@@ -214,7 +226,9 @@ public class PDFRenderer implements Renderer {
 	
 	public void closeStreamWriter() {
 		try {
-			contentStream.close();
+			if(contentStream != null) {
+				contentStream.close();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

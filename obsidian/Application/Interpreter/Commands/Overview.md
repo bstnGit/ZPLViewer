@@ -1,11 +1,11 @@
 | Command | Name                                | Ready | Documentation                              | Priority |
 |---------|-------------------------------------|-------|--------------------------------------------|----------|
-| `^A`    | Scalable/Bitmapped Font              | ❌    | [[^A - Scalable / Bitmapped Font]]          | High     |
+| `^A`    | Scalable/Bitmapped Font              | ✅    | [[^A - Scalable / Bitmapped Font]]          | High     |
 | `^FW`   | Field Orientation                   | ❌    | [[^FW - Field Orientation]]                | High     |
 | `^LH`   | Label Home                          | ❌    | [[^LH - Label Home]]                       | High     |
 | `^GF`   | Graphic Field                       | ❌    | [[^GF - Graphic Field]]                    | High     |
 | `^PO`   | Print Orientation                   | ❌    | [[^PO - Print Orientation]]                | High     |
-| `^CC` `~CC`| Change Carets                    | ❌    | [[^CC - Change Carets]]                    | Medium   |
+| `^CC` `~CC`| Change Carets                    | ✅    | [[^CC - Change Carets]]                    | Medium   |
 | `^LR`   | Label Reverse Print                 | ❌    | [[^LR - Label Reverse Print]]              | Medium   |
 | `^MU`   | Set Units of Measurement            | ❌    | [[^MU - Set Units of Measurement]]         | Medium   |
 | `^LL`   | Label Length                        | ❌    | [[^LL - Label Length]]                     | Low      |

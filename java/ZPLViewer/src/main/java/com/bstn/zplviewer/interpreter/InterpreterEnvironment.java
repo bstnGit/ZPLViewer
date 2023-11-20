@@ -1,10 +1,13 @@
 package com.bstn.zplviewer.interpreter;
 
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 import com.bstn.zplviewer.graphics.ImageConverter;
 import com.bstn.zplviewer.graphics.RenderQueue;
+import com.bstn.zplviewer.renderables.Code128Barcode;
+import com.bstn.zplviewer.renderables.Graphic;
+import com.bstn.zplviewer.renderables.Rectangle;
+import com.bstn.zplviewer.renderables.Text;
 import com.bstn.zplviewer.util.UnitConverter;
 import com.bstn.zplviewer.zpl.constants.ZBarcodeFormat;
 import com.bstn.zplviewer.zpl.constants.ZCode128Mode;
@@ -12,12 +15,6 @@ import com.bstn.zplviewer.zpl.constants.ZColor;
 import com.bstn.zplviewer.zpl.constants.ZFont;
 import com.bstn.zplviewer.zpl.constants.ZJustification;
 import com.bstn.zplviewer.zpl.constants.ZOrientation;
-
-import renderables.Code128Barcode;
-import renderables.Graphic;
-import renderables.Rectangle;
-import renderables.Renderable;
-import renderables.Text;
 
 public class InterpreterEnvironment {
 	
@@ -44,8 +41,8 @@ public class InterpreterEnvironment {
 	private ZBarcodeFormat barcodeFormat;
 	private int barcodeModuleWidth;
 	private float barcodeWidthRatio;
-	private int tempBarcodeHeight;
 	private int barcodeHeight;
+	private int globalBarcodeHeight;
 	private boolean barcodeUccCheckDigitEnabled;
 	private ZCode128Mode code128Mode;
 
@@ -108,7 +105,7 @@ public class InterpreterEnvironment {
 		float x = unitConverter.dotsToPDFPoints(fieldX);
 		float y = unitConverter.dotsToPDFPoints(fieldY);
 		float width = unitConverter.dotsToPDFPoints(data.length() * 11 * barcodeModuleWidth);
-		float height = unitConverter.dotsToPDFPoints((tempBarcodeHeight == 0) ? barcodeHeight : tempBarcodeHeight);
+		float height = unitConverter.dotsToPDFPoints(getCurrentBarcodeHeight());
 		
 		renderQueue.addElement(new Code128Barcode(x, y, width, height, ZColor.BLACK, orientation, justification, data, barcodeModuleWidth, barcodeWidthRatio, barcodePrintInterpretationLine, barcodePrintInterpretationLineAboveCode, false, code128Mode));
 	}
@@ -118,9 +115,21 @@ public class InterpreterEnvironment {
 		fieldY = 0;
 		fieldReversed = false;
 		barcodeFormat = null;
-		tempBarcodeHeight = 0;
+		barcodeHeight = 0;
 		justification = null;
 		tempOrientation = null;
+	}
+	
+	public float getCurrentBarcodeHeight() {
+		if(barcodeHeight == 5 || barcodeHeight == 0) {
+			if(globalBarcodeHeight != 0) {
+				return globalBarcodeHeight;
+			}else {
+				return barcodeHeight;
+			}
+		}
+		
+		return barcodeHeight;
 	}
 
 	public RenderQueue getRenderQueue() {
@@ -219,20 +228,20 @@ public class InterpreterEnvironment {
 		this.barcodeWidthRatio = barcodeWidthRatio;
 	}
 
+	public int getGlobalBarcodeHeight() {
+		return globalBarcodeHeight;
+	}
+
 	public int getBarcodeHeight() {
 		return barcodeHeight;
 	}
 
-	public int getTempBarcodeHeight() {
-		return tempBarcodeHeight;
-	}
-
-	public void setTempBarcodeHeight(int tempBarcodeHeight) {
-		this.tempBarcodeHeight = tempBarcodeHeight;
-	}
-
 	public void setBarcodeHeight(int barcodeHeight) {
 		this.barcodeHeight = barcodeHeight;
+	}
+
+	public void setGlobalBarcodeHeight(int globalBarcodeHeight) {
+		this.globalBarcodeHeight = globalBarcodeHeight;
 	}
 
 	public ZOrientation getTempOrientation() {

@@ -9,7 +9,9 @@ public class Logger {
 				System.err.println("Error: " + message);
 				System.exit(0);
 			}
-			case WARNING, INFO -> System.out.println("Warning: " + message);
+			case WARNING -> System.out.println("Warning: " + message);
+			case INFO -> System.out.println("Info: " + message);
+			
 			default ->
 				throw new IllegalArgumentException("Unexpected value: " + level);
 		}

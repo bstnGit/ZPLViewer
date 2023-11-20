@@ -75,8 +75,6 @@ public class GraphicField extends Command {
 	public void execute(InterpreterEnvironment env) {
 		if(binaryByteCount != -1 && graphicFieldCount != -1 && bytesPerRow != -1 && data != "") {
 			env.drawGraphic(data, bytesPerRow, 1, 1);
-		}else {
-			Logger.warning("Graphic Field '^GF' - ignored because a value is not specified");
 		}
 	}
 

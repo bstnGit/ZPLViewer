@@ -1,0 +1,17 @@
+package com.bstn.zplviewer.graphics;
+
+import java.io.File;
+
+import com.bstn.zplviewer.renderables.Code128Barcode;
+import com.bstn.zplviewer.renderables.Graphic;
+import com.bstn.zplviewer.renderables.Rectangle;
+import com.bstn.zplviewer.renderables.Text;
+
+public interface Renderer {
+	void drawText(Text text);
+	void drawRectangle(Rectangle rectangle);
+	void drawCode128Barcode(Code128Barcode code128Barcode);
+	void drawGraphic(Graphic graphic);
+	boolean save(File file);
+	
+}

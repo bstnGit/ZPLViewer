@@ -2,3 +2,22 @@
 1700137557018	Move compilation unit
 1700138406235	Rename package 'com.bstn.zplviewer.graphics.drawables'
 1700140402181	Rename method 'getColor'
+1700208981469	Rename package 'renderables'
+1700217842133	Delete element
+1700217848672	Rename type 'RenderQueue'
+1700217923404	Rename type 'Renderer'
+1700217953483	Rename type 'RenderQueue'
+1700218017001	Move compilation unit
+1700218038675	Rename field 'renderer'
+1700218151968	Delete element
+1700220898404	Rename local variable 'index'
+1700220906064	Rename local variable 'i'
+1700225027331	Move 'Swiss-721-Condensed-Bold.ttf' to 'resources'
+1700225324257	Move 'Swiss 721 Condensed Bold.otf' to 'ZPLViewer'
+1700225342556	Move 'Swiss-721-Condensed-Bold.ttf' to 'ZPLViewer'
+1700228735319	Rename field 'barcodeHeight'
+1700228744152	Rename field 'tempBarcodeHeight'
+1700230085305	Rename method 'setBarcodeHeight'
+1700230097956	Rename method 'setTempBarcodeHeight'
+1700230109010	Rename method 'getBarcodeHeight'
+1700230122750	Rename method 'getTempBarcodeHeight'

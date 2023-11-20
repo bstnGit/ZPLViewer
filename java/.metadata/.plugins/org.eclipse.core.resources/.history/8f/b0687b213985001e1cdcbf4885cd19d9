@@ -1,0 +1,58 @@
+package com.bstn.zplviewer.graphics;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.bstn.zplviewer.renderables.Renderable;
+
+/**
+ * Represents a queue for rendering graphical elements.
+ */
+public class RenderQueue {
+    private List<List<Renderable>> renderQueues;
+    private List<Renderable> currentQueue;
+
+    /**
+     * Constructs an instance of RenderQueue.
+     */
+    public RenderQueue() {
+        renderQueues = new ArrayList<>();
+        currentQueue = new ArrayList<>();
+    }
+
+    /**
+     * Moves to the next rendering queue.
+     */
+    public void moveToNextQueue() {
+        renderQueues.add(currentQueue);
+        currentQueue = new ArrayList<>();
+    }
+
+    /**
+     * Adds a Renderable element to the current rendering queue.
+     *
+     * @param renderable The Renderable object to be added to the queue.
+     */
+    public void enqueueRenderable(Renderable renderable) {
+        currentQueue.add(renderable);
+    }
+
+    /**
+     * Renders each Renderable object in the current queue using the provided PDFRenderer.
+     *
+     * @param pdfRenderer The PDFRenderer used to render each element in the queue.
+     * @param outputFile The File where the rendered PDF will be saved.
+     * @return The PDFRenderer after rendering all elements in the current queue.
+     */
+    public void render(PDFRenderer pdfRenderer, File outputFile) {
+        for (Renderable renderable : currentQueue) {
+            renderable.render(pdfRenderer);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "RenderQueue [renderQueues=" + renderQueues + "]";
+    }
+}

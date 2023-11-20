@@ -83,7 +83,7 @@ public class Code128Barcode extends Command {
 	public void execute(InterpreterEnvironment env) {
 		env.setBarcodeFormat(ZBarcodeFormat.BARCODE128);
 		env.setTempOrientation(orientation);
-		env.setTempBarcodeHeight(barcodeHeight);
+		env.setBarcodeHeight(barcodeHeight);
 		env.setBarcodePrintInterpretationLine(printInterpretationLine);
 		env.setBarcodePrintInterpretationLineAboveCode(printInterpretationLineAboveCode);
 		env.setCode128Mode(mode);

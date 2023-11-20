@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Application/Interpreter/Commands/Untitled.md",
-                "mode": "source",
+                "file": "Application/Patchnotes/0.4.1.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Application/Interpreter/Commands/Untitled.md",
+                "file": "Application/Patchnotes/0.4.1.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Application/Interpreter/Commands/Untitled.md",
+                "file": "Application/Patchnotes/0.4.1.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Application/Interpreter/Commands/Untitled.md"
+                "file": "Application/Patchnotes/0.4.1.md"
               }
             }
           }
@@ -148,16 +148,16 @@
   },
   "active": "d0b0e41223541c5b",
   "lastOpenFiles": [
-    "Application/Patchnotes/0.4.1.md",
+    "Application/Interpreter/Commands/Overview.md",
     "Application/Interpreter/Commands/Untitled.md",
+    "Application/Interpreter/Programmierung.md",
     "Application/Interpreter/Zebra Printer Language.md",
+    "Application/ZPLII-Prog.pdf",
+    "Application/Patchnotes/0.4.1.md",
     "Application/Interpreter/Commands/^BC - Code 128 Bar Code.md",
     "^GF - Graphic Field.md",
-    "Application/Interpreter/Commands/Overview.md",
     "Application/Patchnotes",
     "Application/Converter/Libarys.md",
-    "Application/ZPLII-Prog.pdf",
-    "Application/Interpreter/Programmierung.md",
     "res/D_for_the_m_parameter.png",
     "res/U_for_the_m_parameter.png",
     "res/N_for_the_m_parameter.png",

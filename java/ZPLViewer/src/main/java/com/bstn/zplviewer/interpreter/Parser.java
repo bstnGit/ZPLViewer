@@ -22,6 +22,7 @@ import com.bstn.zplviewer.zpl.command.GraphicBox;
 import com.bstn.zplviewer.zpl.command.GraphicField;
 import com.bstn.zplviewer.zpl.command.LabelReversePrint;
 import com.bstn.zplviewer.zpl.command.RecallGraphic;
+import com.bstn.zplviewer.zpl.command.ScalableBitmappedFont;
 
 public class Parser {
 
@@ -36,7 +37,8 @@ public class Parser {
 	
 	private void init() {
 		commands = new HashMap<>();
-
+		
+		commands.put("^A", ScalableBitmappedFont.class);
 		commands.put("^FO", FieldOrigin.class);
 		commands.put("^FT", FieldTypeset.class);
 		commands.put("^CF", ChangeAlphanumericDefaultFont.class);
